@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE QuickLink PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<QuickLink action="workflow" category="Manage" messageKey="Preferred-Name-Identity-Update" name="Preferred-Name-QuickLink" ordering="5">
+  <Attributes>
+    <Map>
+      <entry key="workflowName" value="Preferred-Name-Identity-Update"/>
+    </Map>
+  </Attributes>
+  <QuickLinkOptions allowOther="true" allowSelf="true">
+    <DynamicScopeRef>
+      <Reference class="sailpoint.object.DynamicScope" name="Manager"/>
+    </DynamicScopeRef>
+  </QuickLinkOptions>
+  <QuickLinkOptions allowOther="true" allowSelf="true">
+    <DynamicScopeRef>
+      <Reference class="sailpoint.object.DynamicScope" name="Self Service"/>
+    </DynamicScopeRef>
+  </QuickLinkOptions>
+</QuickLink>

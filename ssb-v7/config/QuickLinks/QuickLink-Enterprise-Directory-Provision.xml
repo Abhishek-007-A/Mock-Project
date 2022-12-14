@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE QuickLink PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<QuickLink action="workflow" category="Manage" messageKey="Enterprise-Directory-Provision" name="Enterprise-Directory-Provision-QuickLink" ordering="4">
+  <Attributes>
+    <Map>
+      <entry key="workflowName" value="Enterprise-Directory-Provisioning-Update"/>
+    </Map>
+  </Attributes>
+  <QuickLinkOptions allowOther="true" allowSelf="true">
+    <DynamicScopeRef>
+      <Reference class="sailpoint.object.DynamicScope" name="Manager"/>
+    </DynamicScopeRef>
+  </QuickLinkOptions>
+</QuickLink>

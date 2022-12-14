@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="HR-Self-Service-Provisioning-Disable-Rule">
+  <Source>
+  import sailpoint.api.Provisioner;
+  import sailpoint.object.ProvisioningPlan;
+  import sailpoint.object.Identity;
+  import sailpoint.tools.GeneralException;
+  import sailpoint.object.ProvisioningPlan.AccountRequest;
+  import sailpoint.object.ProvisioningPlan.AccountRequest.Operation;
+
+
+  Identity identityObj=context.getObjectById(Identity.class,"7f00000183f116428183f1ac26aa0219");
+
+
+  System.out.println("Provisioning Rule is Started .....");
+
+  ProvisioningPlan plan =new ProvisioningPlan(); // Provision Plan object is Created.
+
+  System.out.println("Plan is working"+identityObj.getDisplayName());
+
+  if(identityObj!=null)
+  {
+    plan.setIdentity(identityObj);
+
+    AccountRequest jdbcAccReq = new AccountRequest();
+
+    jdbcAccReq.setApplication("HR-Self-Service");
+
+    jdbcAccReq.setOperation(ProvisioningPlan.AccountRequest.Operation.Disable);
+
+    jdbcAccReq.setNativeIdentity("1384");
+
+    plan.add(jdbcAccReq);
+
+
+    System.out.println(" Provisioning PLAN :  #################### "+ plan.toXml());
+
+    Provisioner p = new Provisioner(context);
+    p.execute(plan);
+    System.out.println("Provisioning Rule is Ended .......");
+  }
+
+
+  return "Rule is completed.........";
+
+  </Source>
+</Rule>

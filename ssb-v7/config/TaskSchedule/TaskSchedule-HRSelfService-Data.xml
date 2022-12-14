@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE TaskSchedule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<TaskSchedule name="HRSelfService-Data" nextExecution="1702099920000">
+  <Arguments>
+    <Map>
+      <entry key="executor" value="HR-Self-ServiceFullAggregation"/>
+      <entry key="launcher" value="spadmin"/>
+      <entry key="nextActualFireTime" value="1702099920000"/>
+    </Map>
+  </Arguments>
+  <CronExpressions>
+    <String>0 2 * * * ? </String>
+  </CronExpressions>
+  <Description>A full dataload of all data from the HR Self Service table will be loaded into IdentityIQ once every week at 2AM, CT.</Description>
+</TaskSchedule>

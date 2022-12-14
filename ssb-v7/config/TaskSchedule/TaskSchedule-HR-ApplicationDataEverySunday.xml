@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE TaskSchedule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<TaskSchedule name="HR-ApplicationDataEverySunday" nextExecution="1702146600000">
+  <Arguments>
+    <Map>
+      <entry key="executor" value="Full-Aggregate-HR-Application"/>
+      <entry key="launcher" value="spadmin"/>
+      <entry key="nextActualFireTime" value="1702146600000"/>
+    </Map>
+  </Arguments>
+  <CronExpressions>
+    <String>0 0 0/2 ? * SUN *</String>
+  </CronExpressions>
+  <Description>A full dataload of all data from the authoritative source will be loaded into IdentityIQ every Sunday at 2AM, CT.</Description>
+</TaskSchedule>

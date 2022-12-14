@@ -1,0 +1,118 @@
+--
+-- This script is generated from the *Extended.hbm.xml
+-- files and contains alter statements and indexes for
+-- extended attributes that can be applied to an
+-- existing database.
+--
+
+USE identityiq;
+
+--
+-- Identity
+--
+
+alter table identityiq.spt_identity add extended1 varchar(450);
+create index spt_identity_extended1_ci on identityiq.spt_identity (extended1(255));
+alter table identityiq.spt_identity add extended2 varchar(450);
+create index spt_identity_extended2_ci on identityiq.spt_identity (extended2(255));
+alter table identityiq.spt_identity add extended3 varchar(450);
+create index spt_identity_extended3_ci on identityiq.spt_identity (extended3(255));
+alter table identityiq.spt_identity add extended4 varchar(450);
+create index spt_identity_extended4_ci on identityiq.spt_identity (extended4(255));
+alter table identityiq.spt_identity add extended5 varchar(450);
+create index spt_identity_extended5_ci on identityiq.spt_identity (extended5(255));
+alter table identityiq.spt_identity add extended6 varchar(450);
+create index spt_identity_extended6_ci on identityiq.spt_identity (extended6(255));
+alter table identityiq.spt_identity add extended7 varchar(450);
+create index spt_identity_extended7_ci on identityiq.spt_identity (extended7(255));
+alter table identityiq.spt_identity add extended8 varchar(450);
+create index spt_identity_extended8_ci on identityiq.spt_identity (extended8(255));
+alter table identityiq.spt_identity add extended9 varchar(450);
+create index spt_identity_extended9_ci on identityiq.spt_identity (extended9(255));
+alter table identityiq.spt_identity add extended10 varchar(450);
+create index spt_identity_extended10_ci on identityiq.spt_identity (extended10(255));
+alter table identityiq.spt_identity add country varchar(450);
+create index spt_identity_country_ci on identityiq.spt_identity (country(255));
+alter table identityiq.spt_identity add department varchar(450);
+create index spt_identity_department_ci on identityiq.spt_identity (department(255));
+alter table identityiq.spt_identity add employee_id varchar(450);
+create index spt_identity_employeeId_ci on identityiq.spt_identity (employee_id(255));
+alter table identityiq.spt_identity add jobtitle varchar(450);
+create index spt_identity_jobtitle_ci on identityiq.spt_identity (jobtitle(255));
+alter table identityiq.spt_identity add province varchar(450);
+create index spt_identity_province_ci on identityiq.spt_identity (province(255));
+
+--
+-- Link
+--
+
+alter table identityiq.spt_link add extended1 varchar(450);
+create index spt_link_extended1_ci on identityiq.spt_link (extended1(255));
+alter table identityiq.spt_link add extended2 varchar(450);
+alter table identityiq.spt_link add extended3 varchar(450);
+alter table identityiq.spt_link add extended4 varchar(450);
+alter table identityiq.spt_link add extended5 varchar(450);
+
+--
+-- Application
+--
+
+alter table identityiq.spt_application add extended1 varchar(450);
+create index spt_app_extended1_ci on identityiq.spt_application (extended1(255));
+alter table identityiq.spt_application add extended2 varchar(450);
+alter table identityiq.spt_application add extended3 varchar(450);
+alter table identityiq.spt_application add extended4 varchar(450);
+
+--
+-- Bundle
+--
+
+alter table identityiq.spt_bundle add extended1 varchar(450);
+create index spt_bundle_extended1_ci on identityiq.spt_bundle (extended1(255));
+alter table identityiq.spt_bundle add extended2 varchar(450);
+alter table identityiq.spt_bundle add extended3 varchar(450);
+alter table identityiq.spt_bundle add extended4 varchar(450);
+
+--
+-- ManagedAttribute
+--
+
+alter table identityiq.spt_managed_attribute add extended1 varchar(450);
+create index spt_managed_attr_extended1_ci on identityiq.spt_managed_attribute (extended1(255));
+alter table identityiq.spt_managed_attribute add extended2 varchar(450);
+create index spt_managed_attr_extended2_ci on identityiq.spt_managed_attribute (extended2(255));
+alter table identityiq.spt_managed_attribute add extended3 varchar(450);
+create index spt_managed_attr_extended3_ci on identityiq.spt_managed_attribute (extended3(255));
+
+--
+-- CertificationItem
+--
+
+alter table identityiq.spt_certification_item add extended1 varchar(450);
+create index spt_certitem_extended1_ci on identityiq.spt_certification_item (extended1(255));
+alter table identityiq.spt_certification_item add extended2 varchar(450);
+alter table identityiq.spt_certification_item add extended3 varchar(450);
+alter table identityiq.spt_certification_item add extended4 varchar(450);
+alter table identityiq.spt_certification_item add extended5 varchar(450);
+
+--
+-- Target
+--
+
+alter table identityiq.spt_target add extended1 varchar(255);
+create index spt_target_extended1_ci on identityiq.spt_target (extended1);
+
+--
+-- Alert
+--
+
+alter table identityiq.spt_alert add extended1 varchar(255);
+create index spt_alert_extended1_ci on identityiq.spt_alert (extended1);
+
+--
+-- Server
+--
+
+alter table identityiq.spt_server add extended1 varchar(255);
+create index spt_server_extended1_ci on identityiq.spt_server (extended1);
+

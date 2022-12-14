@@ -1,0 +1,128 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" libraries="Identity,BatchRequest" name="Preferred-Name-Identity-Update" type="IdentityUpdate">
+  <Variable input="true" name="identityName"/>
+  <Variable initializer="true" name="trace"/>
+  <Variable name="identityModel"/>
+  <Variable input="true" name="quickLinkIdentityId"/>
+  <Variable input="true" name="launcher"/>
+  <Variable input="true" name="plan"/>
+  <Variable initializer="true" name="transient"/>
+  <Step icon="Start" name="Start" posX="28" posY="10">
+    <Transition to="User Name of Identity"/>
+  </Step>
+  <Step icon="Message" name="User Name of Identity" posX="133" posY="10" resultVariable="identityName">
+    <Script>
+      <Source>import sailpoint.object.Identity;
+      if(null != quickLinkIdentityId){
+      Identity identity = context.getObjectById(Identity.class, quickLinkIdentityId);
+       return identity.getName();
+      }</Source>
+    </Script>
+    <Transition to="Identity Model"/>
+  </Step>
+  <Step action="call:getIdentityModel" icon="Undo" name="Identity Model" posX="235" posY="11" resultVariable="identityModel">
+    <Description>
+       Initialize the data for the identity that we are creating.
+    </Description>
+    <Transition to="Updating Attribute Form"/>
+  </Step>
+  <Step icon="Task" name="Updating Attribute Form" posX="342" posY="13">
+    <Approval name="Update Preferred Name Attribute" owner="ref:launcher" return="identityModel" send="">
+      <Arg name="workItemFormBasePath" value="identityModel"/>
+      <Form name="Update Preferred Name Attribute">
+        <Attributes>
+          <Map>
+            <entry key="hideIncompleteFields">
+              <value>
+                <Boolean/>
+              </value>
+            </entry>
+            <entry key="includeHiddenFields">
+              <value>
+                <Boolean/>
+              </value>
+            </entry>
+            <entry key="pageTitle" value="Update Preferred Name Attribute"/>
+          </Map>
+        </Attributes>
+        <Section name="User Update Preferred Name Attribute">
+          <Field displayName="Preferred Name" helpKey="Enter your preferred name" name="preferredName" required="true" type="string"/>
+        </Section>
+        <Button action="next" label="Update"/>
+        <Button action="cancel" label="Close"/>
+        <Button action="refresh" label="Refresh"/>
+      </Form>
+    </Approval>
+    <Transition to="Build Provisioning Plan"/>
+  </Step>
+  <Step action="call:buildPlanFromIdentityModel" icon="Provision" name="Build Provisioning Plan" posX="490" posY="13" resultVariable="plan">
+    <Arg name="identityModel" value="ref:identityModel"/>
+    <Description>
+      Convert the request into a provisioning plan.
+    </Description>
+    <Transition to="Submit Request"/>
+  </Step>
+  <Step icon="Task" name="Submit Request" posX="612" posY="12">
+    <Arg name="identityEmailTemplate"/>
+    <Arg name="enableRetryRequest"/>
+    <Arg name="securityOfficerElectronicSignature"/>
+    <Arg name="fallbackApprover"/>
+    <Arg name="endOnManualWorkItems"/>
+    <Arg name="userEmailTemplate"/>
+    <Arg name="policiesToCheck"/>
+    <Arg name="project"/>
+    <Arg name="workItemComments"/>
+    <Arg name="identityRequestId"/>
+    <Arg name="approvalSplitPoint"/>
+    <Arg name="source"/>
+    <Arg name="identityDisplayName"/>
+    <Arg name="foregroundProvisioning"/>
+    <Arg name="ownerElectronicSignature"/>
+    <Arg name="batchRequestItemId"/>
+    <Arg name="saveUnmanagedPlan_WithProjectArgument"/>
+    <Arg name="splitPlans"/>
+    <Arg name="doRefresh"/>
+    <Arg name="plan" value="ref:plan"/>
+    <Arg name="flow"/>
+    <Arg name="identityElectronicSignature"/>
+    <Arg name="identityName" value="ref:identityName"/>
+    <Arg name="approvalSet"/>
+    <Arg name="violationReviewDecision"/>
+    <Arg name="filterRejects"/>
+    <Arg name="splitProjects"/>
+    <Arg name="requireCommentsForDenial"/>
+    <Arg name="requesterEmailTemplate"/>
+    <Arg name="approvalEmailTemplate"/>
+    <Arg name="ticketManagementApplication"/>
+    <Arg name="securityOfficerName"/>
+    <Arg name="approvingIdentities"/>
+    <Arg name="managerEmailTemplate"/>
+    <Arg name="ticketId"/>
+    <Arg name="approvalScheme"/>
+    <Arg name="allowRequestsWithViolations"/>
+    <Arg name="workItemPriority"/>
+    <Arg name="managerElectronicSignature"/>
+    <Arg name="requireViolationReviewComments"/>
+    <Arg name="splitApprovalSet"/>
+    <Arg name="approvalMode"/>
+    <Arg name="trace" value="ref:trace"/>
+    <Arg name="endOnProvisioningForms"/>
+    <Arg name="splitWorkItemComments"/>
+    <Arg name="requireCommentsForApproval"/>
+    <Arg name="notificationScheme"/>
+    <Arg name="policyViolations"/>
+    <Arg name="policyScheme"/>
+    <Arg name="setPreviousApprovalDecisions"/>
+    <Arg name="optimisticProvisioning"/>
+    <Arg name="securityOfficerEmailTemplate"/>
+    <Description>
+      Call the LCM Create and Update workflow with the plan that was created.
+    </Description>
+    <WorkflowRef>
+      <Reference class="sailpoint.object.Workflow" name="LCM Provisioning"/>
+    </WorkflowRef>
+    <Transition to="Stop"/>
+  </Step>
+  <Step icon="Stop" name="Stop" posX="731" posY="15"/>
+</Workflow>

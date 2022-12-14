@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Bundle PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Bundle displayName="Engineering Role - Birthright" name="Engineering-Role" type="rapidSetupBirthright">
+  <Attributes>
+    <Map>
+      <entry key="accountSelectorRules"/>
+      <entry key="allowDuplicateAccounts" value="false"/>
+      <entry key="allowMultipleAssignments" value="false"/>
+      <entry key="mergeTemplates" value="false"/>
+      <entry key="sysDescriptions">
+        <value>
+          <Map>
+            <entry key="en_US"/>
+          </Map>
+        </value>
+      </entry>
+    </Map>
+  </Attributes>
+  <Owner>
+    <Reference class="sailpoint.object.Identity" name="spadmin"/>
+  </Owner>
+  <Selector>
+    <IdentitySelector>
+      <MatchExpression and="true">
+        <MatchTerm name="department_code" type="Entitlement" value="19">
+          <ApplicationRef>
+            <Reference class="sailpoint.object.Application" name="HR"/>
+          </ApplicationRef>
+        </MatchTerm>
+      </MatchExpression>
+    </IdentitySelector>
+  </Selector>
+  <Profiles>
+    <Profile>
+      <ApplicationRef>
+        <Reference class="sailpoint.object.Application" name="Enterprise-Directory"/>
+      </ApplicationRef>
+      <Constraints>
+        <Filter operation="CONTAINS_ALL" property="groups">
+          <Value>
+            <List>
+              <String>cn=xcl-user_app,ou=groups,dc=sailpoint,dc=sp</String>
+              <String>cn=wrd-user_app,ou=groups,dc=sailpoint,dc=sp</String>
+              <String>cn=dir-admin_net,ou=groups,dc=sailpoint,dc=sp</String>
+            </List>
+          </Value>
+        </Filter>
+      </Constraints>
+    </Profile>
+  </Profiles>
+</Bundle>

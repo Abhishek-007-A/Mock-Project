@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Escalation-Rule" type="Escalation">
+  <Description>
+    Example rule to escalate any workitems or certification
+    items that are owned by curly to be re-assigned to larry
+    and any items assigned to larry assigned to mo.
+  </Description>
+  <Signature returnType="String">
+    <Inputs>
+      <Argument name="context">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to
+          access the database.
+        </Description>
+      </Argument>
+      <Argument name="item">
+        <Description>
+          The sailpoint.object.Notifiable to escalate.
+        </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="newOwner">
+        <Description>
+          The name of the Identity object that should be the new owner of
+          the notifiable.
+        </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>    
+    import sailpoint.object.Identity;
+    String newOwner = "spadmin";
+    Identity currentOwner = item.getNotificationOwner(context);
+    if ( currentOwner != null &amp; &amp; currentOwner.getManager()!= null ) {
+    String currentOwnerName =currentOwner.getManager().getName();
+    if ( currentOwnerName != null ) {
+    newOwner = currentOwnerName;
+    } 
+    }
+    return newOwner;    
+  </Source>
+</Rule>

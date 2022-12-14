@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="Rule-GetManager">
+  <Source>
+  import sailpoint.object.Identity;
+  import sailpoint.tools.GeneralException;
+
+  //Identity identityobj = context.getObject(Identity.class,"c0a8bc01831114f5818311617e5c005c");
+  Identity identityobj = context.getObjectByName(Identity.class,"Kennedy, Emma A.");
+  if(identityobj!=null)
+  {
+    System.out.println("Manager_Name :"+identityobj.getManager());
+    return "Manager_Name :"+identityobj.getManager();
+  } 
+
+  </Source>
+</Rule>

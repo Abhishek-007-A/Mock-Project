@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="JDBC-Provision-Rule" type="JDBCProvision">
+  <Description>This rule is used by the JDBC connector to do provisioning of the data .</Description>
+  <Signature returnType="ProvisioningResult">
+    <Inputs>
+      <Argument name="log" type="org.apache.commons.logging.Log">
+        <Description>
+          The log object associated with the SailPointContext.
+        </Description>
+      </Argument>
+      <Argument name="context" type="sailpoint.api.SailPointContext">
+        <Description>
+          A sailpoint.api.SailPointContext object that can be used to query the database if necessary.
+        </Description>
+      </Argument>
+      <Argument name="application">
+        <Description>
+                The application whose data file is being processed.
+                </Description>
+      </Argument>
+      <Argument name="schema">
+        <Description>
+                The Schema currently in use.
+                </Description>
+      </Argument>
+      <Argument name="connection">
+        <Description>
+                A connection object to connect to database.
+                </Description>
+      </Argument>
+      <Argument name="plan">
+        <Description>
+                The ProvisioningPlan created against the JDBC application.
+                </Description>
+      </Argument>
+    </Inputs>
+    <Returns>
+      <Argument name="result">
+        <Description>
+                A Provisioning Result object is desirable to return the status.IT can be a new object or part of  Provisioning Plan
+                </Description>
+      </Argument>
+    </Returns>
+  </Signature>
+  <Source>import sailpoint.object.ProvisioningPlan;
+import sailpoint.object.ProvisioningResult;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningPlan.AttributeRequest;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.util.Iterator;
+import java.util.List;
+ProvisioningResult result = new ProvisioningResult();
+log.error("*** provisioning plan "+plan.toXml());
+try {
+//String query ="insert into ohrm_user (#columns) values (#values)";
+List accountRequests = plan.getAccountRequests();
+
+for (ProvisioningPlan.AccountRequest acct : accountRequests) {
+List attributeRequests = acct.getAttributeRequests();
+String columns="";
+String values="";
+ProvisioningPlan.AttributeRequest attrReq = null;
+Iterator iter = attributeRequests.iterator();
+while((attrReq = iter.next()) != null) {
+System.out.println("==================3");
+columns += attrReq.getName();
+values =values+"'"+ attrReq.getValue(context) + "'";
+if(iter.hasNext()) {
+log.error("==================4");
+columns += ",";
+values += ",";
+}else break;
+}
+
+log.error(columns);
+log.error(values);
+// query.replaceAll("#columns",columns);
+//query.replaceAll("#values", values);
+
+
+String query = "insert into ohrm_user ("+columns+") values ("+values+")";
+log.error("Final Query " + query);
+//log.error("****** Final Query " + query);
+Statement stmt = connection.createStatement();
+stmt.execute(query);
+result.setStatus(ProvisioningResult.STATUS_COMMITTED);
+}
+} catch (Exception e) {
+log.error("==================5");
+log.error(e.getMessage());
+e.printStackTrace();
+result.setStatus(ProvisioningResult.STATUS_FAILED);
+throw new Exception(e.getMessage());
+}
+return result;</Source>
+</Rule>

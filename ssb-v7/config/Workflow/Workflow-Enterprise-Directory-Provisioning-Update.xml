@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Workflow PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Workflow explicitTransitions="true" libraries="Identity,BatchRequest" name="Enterprise-Directory-Provisioning-Update" type="IdentityUpdate">
+  <Variable input="true" name="identityName"/>
+  <Variable initializer="true" name="trace"/>
+  <Variable name="identityModel"/>
+  <Variable input="true" name="quickLinkIdentityId"/>
+  <Variable input="true" name="launcher"/>
+  <Variable input="true" name="plan"/>
+  <Variable initializer="true" name="transient"/>
+  <Step icon="Start" name="Start" posX="28" posY="10">
+    <Transition to="User Name of Identity"/>
+  </Step>
+  <Step icon="Message" name="User Name of Identity" posX="133" posY="10" resultVariable="identityName">
+    <Script>
+      <Source>import sailpoint.object.Identity;
+        if(null != quickLinkIdentityId){
+        Identity identity = context.getObjectById(Identity.class, quickLinkIdentityId);
+        return identity.getName();
+        }</Source>
+    </Script>
+    <Transition to="Identity Model"/>
+  </Step>
+  <Step action="call:getIdentityModel" icon="Undo" name="Identity Model" posX="216" posY="107" resultVariable="identityModel">
+    <Arg name="expandLinks" value="true"/>
+    <Description>
+      Initialize the data for the identity that we are creating.
+    </Description>
+    <Transition to="Updating Attribute Form"/>
+  </Step>
+  <Step icon="Task" name="Updating Attribute Form" posX="328" posY="8">
+    <Approval name="Update Attributes Form" owner="ref:launcher" return="identityModel" send="">
+      <Arg name="workItemFormBasePath" value="identityModel"/>
+      <Form name="Update Attributes Form">
+        <Attributes>
+          <Map>
+            <entry key="hideIncompleteFields">
+              <value>
+                <Boolean/>
+              </value>
+            </entry>
+            <entry key="includeHiddenFields">
+              <value>
+                <Boolean/>
+              </value>
+            </entry>
+            <entry key="pageTitle" value="Update Attributes Form"/>
+          </Map>
+        </Attributes>
+        <Section name="User Update Attributes ">
+          <Field displayName="Common Name" name="links['Enterprise-Directory'].cn" required="true" type="string"/>
+          <Field displayName="First Name" name="links['Enterprise-Directory'].givenName" type="string"/>
+          <Field displayName="Last Name" name="links['Enterprise-Directory'].sn" type="string"/>
+          <Field displayName="UID" name="links['Enterprise-Directory'].uid" type="string"/>
+          <Field displayName="Email ID" name="links['Enterprise-Directory'].mail" type="string"/>
+          <Field displayName="Postal Code" name="links['Enterprise-Directory'].postalCode" type="string"/>
+        </Section>
+        <Button action="next" label="Update"/>
+        <Button action="cancel" label="Close"/>
+        <Button action="refresh" label="Refresh"/>
+      </Form>
+    </Approval>
+    <Transition to="Provisioning Plan"/>
+  </Step>
+  <Step action="call:buildPlanFromIdentityModel" icon="Provision" name="Provisioning Plan" posX="434" posY="104" resultVariable="plan">
+    <Arg name="identityModel" value="ref:identityModel"/>
+    <Description>
+      Convert the request into a provisioning plan.
+    </Description>
+    <Transition to="Submit"/>
+  </Step>
+  <Step icon="Task" name="Submit" posX="552">
+    <Arg name="identityEmailTemplate"/>
+    <Arg name="enableRetryRequest"/>
+    <Arg name="securityOfficerElectronicSignature"/>
+    <Arg name="fallbackApprover"/>
+    <Arg name="endOnManualWorkItems"/>
+    <Arg name="userEmailTemplate"/>
+    <Arg name="policiesToCheck"/>
+    <Arg name="project"/>
+    <Arg name="workItemComments"/>
+    <Arg name="identityRequestId"/>
+    <Arg name="approvalSplitPoint"/>
+    <Arg name="source"/>
+    <Arg name="identityDisplayName"/>
+    <Arg name="foregroundProvisioning"/>
+    <Arg name="ownerElectronicSignature"/>
+    <Arg name="batchRequestItemId"/>
+    <Arg name="saveUnmanagedPlan_WithProjectArgument"/>
+    <Arg name="splitPlans"/>
+    <Arg name="doRefresh"/>
+    <Arg name="plan" value="ref:plan"/>
+    <Arg name="flow"/>
+    <Arg name="identityElectronicSignature"/>
+    <Arg name="identityName" value="ref:identityName"/>
+    <Arg name="approvalSet"/>
+    <Arg name="violationReviewDecision"/>
+    <Arg name="filterRejects"/>
+    <Arg name="splitProjects"/>
+    <Arg name="requireCommentsForDenial"/>
+    <Arg name="requesterEmailTemplate"/>
+    <Arg name="approvalEmailTemplate"/>
+    <Arg name="ticketManagementApplication"/>
+    <Arg name="securityOfficerName"/>
+    <Arg name="approvingIdentities"/>
+    <Arg name="managerEmailTemplate"/>
+    <Arg name="ticketId"/>
+    <Arg name="approvalScheme"/>
+    <Arg name="allowRequestsWithViolations"/>
+    <Arg name="workItemPriority"/>
+    <Arg name="managerElectronicSignature"/>
+    <Arg name="requireViolationReviewComments"/>
+    <Arg name="splitApprovalSet"/>
+    <Arg name="approvalMode"/>
+    <Arg name="trace" value="ref:trace"/>
+    <Arg name="endOnProvisioningForms"/>
+    <Arg name="splitWorkItemComments"/>
+    <Arg name="requireCommentsForApproval"/>
+    <Arg name="notificationScheme"/>
+    <Arg name="policyViolations"/>
+    <Arg name="policyScheme"/>
+    <Arg name="setPreviousApprovalDecisions"/>
+    <Arg name="optimisticProvisioning"/>
+    <Arg name="securityOfficerEmailTemplate"/>
+    <Description>
+      Call the LCM Create and Update workflow with the plan that was created.
+    </Description>
+    <WorkflowRef>
+      <Reference class="sailpoint.object.Workflow" name="LCM Provisioning"/>
+    </WorkflowRef>
+    <Transition to="Audit Records"/>
+  </Step>
+  <Step icon="Audit" name="Audit Records" posX="680" posY="112">
+    <Script>
+      <Source>import sailpoint.server.Auditor;
+        import sailpoint.object.ProvisioningPlan;
+        import sailpoint.object.ProvisioningPlan.AttributeRequest;
+        import sailpoint.object.ProvisioningPlan.AccountRequest ;
+        import sailpoint.object.Identity;
+        import java.util.List;
+
+        List requester=plan.getRequesters();
+        String requestee=plan.getNativeIdentity();
+        String action="UpdateIdentity";
+        List accountRequests=plan.getAccountRequests();
+
+        if (Auditor.isEnabled(action))
+        {
+        for(Identity req:requester)
+        {
+        for(ProvisioningPlan.AccountRequest accreq:accountRequests )
+        {
+        List attributeRequests =accreq.getAttributeRequests();
+        for(ProvisioningPlan.AttributeRequest attreq:attributeRequests )
+        {
+        Auditor.logAs(req.getName(), action, requestee ,attreq.getName(), attreq.getValue(),null,null);       
+        }
+        }
+        }
+        context.commitTransaction();
+        }</Source>
+    </Script>
+    <Transition to="Stop"/>
+  </Step>
+  <Step icon="Stop" name="Stop" posX="823"/>
+</Workflow>

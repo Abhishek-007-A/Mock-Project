@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<Rule language="beanshell" name="JDBC-ProvisioningRule-Delete" type="JDBCOperationProvisioning">
+  <Description>This rule is used by the JDBC connector to do provisioning of the data .</Description>
+  <Signature returnType="ProvisioningResult"/>
+  <Source>import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.List;
+import sailpoint.object.ProvisioningPlan;
+import sailpoint.object.ProvisioningPlan.AccountRequest;
+import sailpoint.object.ProvisioningResult;
+
+       ProvisioningResult result=new ProvisioningResult();
+        List accountRequest=plan.getAccountRequests();
+        log.error(plan.toXml());
+        for(ProvisioningPlan.AccountRequest acct:accountRequest)
+        {
+            if(AccountRequest.Operation.Delete.equals(acct.getOperation()))
+            {
+                log.error(acct.getOperation());
+                PreparedStatement statement=connection.prepareStatement("update ohrm_user set deleted='1' where id=?");
+                statement.setString(1, acct.getNativeIdentity());
+                statement.executeUpdate();
+                result.setStatus(ProvisioningResult.STATUS_COMMITTED);
+            }
+            else
+                result.setStatus(ProvisioningResult.STATUS_FAILED);
+        }
+        return result;</Source>
+</Rule>

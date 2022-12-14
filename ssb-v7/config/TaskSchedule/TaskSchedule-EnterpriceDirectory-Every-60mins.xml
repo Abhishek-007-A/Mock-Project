@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE TaskSchedule PUBLIC "sailpoint.dtd" "sailpoint.dtd">
+<TaskSchedule name="EnterpriceDirectory-Every-60mins" nextExecution="1673242200000">
+  <Arguments>
+    <Map>
+      <entry key="executor" value="EnterPriceDirectory-Aggregation"/>
+      <entry key="launcher" value="spadmin"/>
+      <entry key="nextActualFireTime" value="1673242200000"/>
+    </Map>
+  </Arguments>
+  <CronExpressions>
+    <String>0 0 */1 * * ?</String>
+  </CronExpressions>
+  <Description>A full dataload of all data from Enterprise Directory will be loaded into IdentityIQ every  60 minutes, 7 days a week</Description>
+</TaskSchedule>
